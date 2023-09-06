@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://bx3rt4vkwpiw2"]
+
+[ext_resource type="Script" path="res://3d/player/player.gd" id="1_2ite2"]
+[ext_resource type="PackedScene" uid="uid://cy8fikpttsqqv" path="res://assets/3d_models/GLTF format/race.glb" id="1_tuixu"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b5k01"]
+size = Vector3(0.86327, 2.56007, 1.29929)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dqn0s"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gdsg1"]
+material = SubResource("StandardMaterial3D_dqn0s")
+top_radius = 0.1
+bottom_radius = 0.1
+height = 0.1
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.107338, 0)
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_2ite2")
+potenzaMotore = 10.0
+friction = -20
+
+[node name="race" parent="." instance=ExtResource("1_tuixu")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0.426094, 0)
+shape = SubResource("BoxShape3D_b5k01")
+
+[node name="lidar" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.686725, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="lidar"]
+mesh = SubResource("CylinderMesh_gdsg1")
+
+[node name="RayCast3D" type="RayCast3D" parent="lidar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0190527, 0)
+target_position = Vector3(4, 0, 0)

@@ -1,0 +1,288 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jul 17 19:05:08 2019
+
+@author: Peter's Fabio
+"""
+from threading import Thread
+import numpy as np
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMenu, QVBoxLayout, QSizePolicy, QMessageBox, QWidget, QPushButton
+
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.patches as patches
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import math
+from robot_components import *
+
+
+class MyThread(Thread):
+   def __init__(self):
+      Thread.__init__(self)
+      
+   def run(self):
+       
+       while ( flag == 0 ): pass
+
+       t = 0
+       delta_t = 1e-3
+       champions = [ ]
+      
+       while t <= 30 and flag == 1:
+           
+            (virt_x, virt_y) = v.evaluate(delta_t)
+            (vl, vr) = p.evaluate(virt_x, virt_y)
+            robot.evaluate(vl, vr, delta_t)
+            champions.append(robot.x)
+            
+            if(len(champions) % 100 == 0 ):
+                cammino.getPlot().plot_update(robot.x, robot.y, virt_x, virt_y)
+               
+            t = t + delta_t
+          
+        
+
+        
+      
+       
+
+
+class App(QMainWindow):
+
+    def __init__(self,title):
+        super().__init__()
+        self.left = 100
+        self.top = 100
+        self.title = title
+        self.width = 500
+        self.height = 400
+        self.initUI()
+        self.plot
+        
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        self.plot = PlotCanvas(self, width=5, height=4)
+        self.plot.move(0,0)
+       
+        
+    def getPlot(self):
+        self.show()
+        return self.plot
+      
+
+
+class PlotCanvas(FigureCanvas):
+
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+
+        FigureCanvas.__init__(self, fig)
+        self.setParent(parent)
+
+        FigureCanvas.setSizePolicy(self,
+                QSizePolicy.Expanding,
+                QSizePolicy.Expanding)
+        FigureCanvas.updateGeometry(self)
+        
+        self.ax = self.figure.add_subplot(111)
+        points = [[0, 0 - base/2],[0, 0 + base/2],[0 + base/2, 0]]
+        self.arrow = patches.Polygon(points)
+       
+        
+       
+        
+        
+
+
+    def plot_update(self, X, Y, vX, vY):
+       
+        self.axes.cla() 
+        #setta l'estensione massima degli assi (non ho trovato sintassi ed ho dovuto sfruttare la proprietà Expanding data al SizePolicy)
+        self.ax.plot(5, 5, 'w-')
+        self.ax.plot(-5, 5, "w-")
+        self.ax.plot(-5, -5, "w-")
+        self.ax.plot(5, -5, "w-")
+       
+       
+        robot_Base_real = plt.Circle((X, Y), base/2, color='b')
+        robot_Base_virtual = plt.Circle((vX, vY), base/2, color='r')
+        
+        
+        self.ax.add_artist(robot_Base_virtual)
+        self.ax.add_artist(robot_Base_real)
+       
+        
+        self.arrow.set_transform(mpl.transforms.Affine2D().rotate(robot.theta) + self.ax.transData)
+       
+        self.ax.add_patch(self.arrow)
+        self.ax.add_artist(self.arrow)
+        
+        self.draw()
+        
+    
+   
+
+
+
+
+    
+class VirtualRobot:
+
+    def __init__(self, vmax, accel, decel):
+        self.vmax = vmax
+        self.accel = accel
+        self.decel = decel
+        self.target_pos = 0
+        self.target_heading = 0
+        self.virtual_pos = 0
+        self.virtual_speed = 0
+        self.decel_distance = self.vmax * self.vmax / (2 * self.decel)
+
+    def set_target(self, current_x, current_y, target_x, target_y):
+        self.virtual_pos = 0
+        self.virtual_speed = 0
+        dx = target_x - current_x
+        dy = target_y - current_y
+
+        self.target_heading = math.atan2(dy, dx)
+        self.target_pos = math.hypot(dx, dy)
+        self.start_x = current_x
+        self.start_y = current_y
+
+
+    def evaluate(self, delta_t):
+        #controllo con profilo di velocità trapezoidale
+        if (self.target_pos - self.virtual_pos) < self.decel_distance:
+            # fase di decelerazione
+            current_accel = -self.decel
+        else:
+            # fase di accelerazione o moto a vel costance
+            current_accel = self.accel
+
+        self.virtual_pos += self.virtual_speed * delta_t + \
+          0.5 * current_accel * delta_t * delta_t
+
+        self.virtual_speed += current_accel * delta_t
+
+        if self.virtual_speed >= self.vmax:
+            self.virtual_speed = self.vmax
+
+        if self.virtual_speed <= 0:
+            self.virtual_speed = 0
+
+        vp_x = self.virtual_pos * math.cos(self.target_heading)
+        vp_y = self.virtual_pos * math.sin(self.target_heading)
+        return (self.start_x + vp_x, self.start_y + vp_y)
+
+
+
+
+
+class PolarControl:
+
+    def __init__(self, robot, kp_lin, sat_lin, kp_angular, sat_angular):
+        self.kp_lin = kp_lin        
+        self.sat_lin = sat_lin
+        self.kp_angular = kp_angular
+        self.sat_angular = sat_angular
+        self.robot = robot
+
+    def evaluate(self, target_x, target_y):
+        
+       
+        dx = target_x - self.robot.x
+        dy = target_y - self.robot.y
+
+        
+        target_heading = math.atan2(dy, dx)
+        distance = math.hypot(dx, dy)
+
+        heading_error = target_heading - robot.theta
+
+        v = self.kp_lin * distance
+        w = self.kp_angular * heading_error
+
+        if v > self.sat_lin:
+            v = self.sat_lin
+        elif v < -self.sat_lin:
+            v = - self.sat_lin
+
+        if w > self.sat_angular:
+            w = self.sat_angular
+        elif w < -self.sat_angular:
+            w = - self.sat_angular
+
+        vl = v - (w * self.robot.wheelbase / 2)
+        vr = v + (w * self.robot.wheelbase / 2)
+        return (vl, vr)
+
+
+
+tr = MyThread()
+flag = 0
+delta_t = 1e-3
+base = 1.5
+robot = Robot(50, 15, base)
+
+t = 0
+p = PolarControl(robot, 1, 1.5, 8, 10)
+v = VirtualRobot(0.5, 0.2, 0.2)
+
+x_array = [ ]
+y_array = [ ]
+vx_array = [ ]
+vy_array = [ ]
+
+
+
+    
+ 
+    
+print("Inserisci coordinate")
+
+X = input("X:")
+Y = input("Y:")
+
+v.set_target(robot.x, robot.y, float(X), float(Y))
+
+
+
+app = QApplication(sys.argv)
+cammino = App("Cammino del robot")
+cammino.getPlot().plot_update(0, 0, 0, 0)
+
+
+tr.start()
+flag = 1
+
+app.exec_()
+
+flag = 0
+tr.join()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+

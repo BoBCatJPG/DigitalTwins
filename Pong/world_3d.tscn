@@ -1,0 +1,167 @@
+[gd_scene load_steps=14 format=3 uid="uid://c7f0mgxajjaa7"]
+
+[ext_resource type="Script" path="res://3d/player/Macchina.gd" id="2_28j85"]
+[ext_resource type="PackedScene" uid="uid://8wkdtw1kusex" path="res://3d/rigis/rota.tscn" id="2_namvk"]
+[ext_resource type="PackedScene" uid="uid://di2i1gvbim0jc" path="res://assets/3d_models/GLTF format/sedan.glb" id="3_nhc4g"]
+[ext_resource type="PackedScene" uid="uid://cycb6ws8ctt6y" path="res://assets/3d_models/GLTF format/wheelDefault.glb" id="4_uuf82"]
+[ext_resource type="PackedScene" uid="uid://bx3rt4vkwpiw2" path="res://3d/player/player.tscn" id="5_c6qnj"]
+[ext_resource type="Script" path="res://Networking.gd" id="6_5wnpp"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_qibkc"]
+sky_top_color = Color(0.278431, 0.411765, 0.831373, 1)
+sky_horizon_color = Color(0.726471, 0.743137, 0.828431, 1)
+ground_bottom_color = Color(0.627451, 0.560784, 0.482353, 1)
+ground_horizon_color = Color(0.726471, 0.743137, 0.828431, 1)
+
+[sub_resource type="Sky" id="Sky_m0jke"]
+sky_material = SubResource("ProceduralSkyMaterial_qibkc")
+
+[sub_resource type="Environment" id="Environment_lbu4v"]
+background_mode = 2
+sky = SubResource("Sky_m0jke")
+tonemap_mode = 2
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mnoqi"]
+albedo_color = Color(0.631373, 0.631373, 0.631373, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5rp8f"]
+material = SubResource("StandardMaterial3D_mnoqi")
+size = Vector2(1000, 1000)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_cl517"]
+data = PackedVector3Array(500, 0, 500, -500, 0, 500, 500, 0, -500, -500, 0, 500, -500, 0, -500, 500, 0, -500)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3kr85"]
+size = Vector3(1.08531, 2.42079, 1.29559)
+
+[node name="World3D" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lbu4v")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.997185, -0.0536617, 0.0523662, 0, 0.698415, 0.715693, -0.0749786, 0.713678, -0.696449, 0, 0, 0)
+light_color = Color(1, 1, 0.945098, 1)
+shadow_enabled = true
+
+[node name="Floor" type="StaticBody3D" parent="."]
+collision_mask = 15
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("PlaneMesh_5rp8f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("ConcavePolygonShape3D_cl517")
+
+[node name="Ruote" type="Node3D" parent="."]
+
+[node name="Rota" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.65368, 1.65693, 0)
+
+[node name="Rota2" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.2838, 0.938513, -0.856894)
+
+[node name="Rota3" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.44185, 0.790336, -1.46471)
+
+[node name="Rota4" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.80183, 0.510446, -0.841442)
+
+[node name="Rota5" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.82888, 1.0434, 1.59939)
+
+[node name="Rota6" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.78175, 1.46714, 0.658905)
+
+[node name="Rota7" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.89615, 2.00859, 0.439253)
+
+[node name="Rota8" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.89615, 3.00859, -0.560747)
+
+[node name="Rota9" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.62182, 2.79008, -0.952825)
+
+[node name="Rota10" parent="Ruote" instance=ExtResource("2_namvk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8488, 2.51742, -0.371424)
+
+[node name="Macchina" type="VehicleBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.895117, 0)
+script = ExtResource("2_28j85")
+
+[node name="sedan" parent="Macchina" instance=ExtResource("3_nhc4g")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Macchina"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, -0.0349762, 0.745687, 0)
+shape = SubResource("BoxShape3D_3kr85")
+
+[node name="fronte_dentra" type="VehicleWheel3D" parent="Macchina"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.667573, 0.26686, 0.631838)
+use_as_traction = true
+use_as_steering = true
+wheel_radius = 0.299
+suspension_travel = 0.5
+suspension_stiffness = 10.0
+damping_compression = 0.6
+damping_relaxation = 0.8
+
+[node name="wheelDefault" parent="Macchina/fronte_dentra" instance=ExtResource("4_uuf82")]
+
+[node name="retro_destra" type="VehicleWheel3D" parent="Macchina"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.68, 0.266855, 0.632)
+wheel_radius = 0.299
+suspension_travel = 0.5
+suspension_stiffness = 10.0
+damping_compression = 0.6
+damping_relaxation = 0.8
+
+[node name="wheelDefault" parent="Macchina/retro_destra" instance=ExtResource("4_uuf82")]
+
+[node name="fronte_sinistra" type="VehicleWheel3D" parent="Macchina"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.667573, 0.26686, -0.651849)
+use_as_traction = true
+use_as_steering = true
+wheel_radius = 0.299
+suspension_travel = 0.5
+suspension_stiffness = 10.0
+damping_compression = 0.6
+damping_relaxation = 0.8
+
+[node name="wheelDefault" parent="Macchina/fronte_sinistra" instance=ExtResource("4_uuf82")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="retro_sinistra" type="VehicleWheel3D" parent="Macchina"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -0.680134, 0.26686, -0.651849)
+wheel_radius = 0.299
+suspension_travel = 0.5
+suspension_stiffness = 10.0
+damping_compression = 0.6
+damping_relaxation = 0.8
+
+[node name="wheelDefault" parent="Macchina/retro_sinistra" instance=ExtResource("4_uuf82")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Macchina"]
+transform = Transform3D(-0.0305383, 0.358201, -0.933145, 0, 0.93358, 0.358368, 0.999534, 0.0109439, -0.0285099, -4.33881, 2.45432, 0.133763)
+
+[node name="Player" parent="." instance=ExtResource("5_c6qnj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.40831, 0, -2.80942)
+potenzaMotore = 5.0
+
+[node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(-0.0392612, 0.241735, -0.969548, 0, 0.970296, 0.241922, 0.999229, 0.00949813, -0.038095, -3.33595, 1.75252, 0.0377829)
+current = true
+
+[node name="Networking" type="Node" parent="."]
+script = ExtResource("6_5wnpp")
+pathCar = NodePath("../Player")
+pathCarRigid = NodePath("../Macchina")
+
+[connection signal="dataReceived" from="Networking" to="Macchina" method="_on_networking_data_received"]
+[connection signal="dataReceived" from="Networking" to="Player" method="_on_networking_data_received"]

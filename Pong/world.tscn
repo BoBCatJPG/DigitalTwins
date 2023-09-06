@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://cnb7e17225d5q"]
+
+[ext_resource type="PackedScene" uid="uid://doyudvj1kme3e" path="res://objects/tank/tank.tscn" id="1_ymq3m"]
+[ext_resource type="PackedScene" uid="uid://dlyrq6dk8k6a8" path="res://objects/barrel/barrel.tscn" id="2_qwkge"]
+[ext_resource type="Script" path="res://Camera2D.gd" id="3_g5rfp"]
+
+[node name="World" type="Node2D"]
+
+[node name="Tank" parent="." instance=ExtResource("1_ymq3m")]
+position = Vector2(201.637, 110.422)
+timeShoot = 2.0
+
+[node name="Barile" parent="." instance=ExtResource("2_qwkge")]
+position = Vector2(68.0768, 84.0949)
+
+[node name="Barile2" parent="." instance=ExtResource("2_qwkge")]
+position = Vector2(415.235, 149.408)
+
+[node name="Barile3" parent="." instance=ExtResource("2_qwkge")]
+position = Vector2(314.539, 251.542)
+
+[node name="Barile4" parent="." instance=ExtResource("2_qwkge")]
+position = Vector2(162.352, 232.692)
+
+[node name="Barile5" parent="." instance=ExtResource("2_qwkge")]
+position = Vector2(641.559, 127.24)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+editor_draw_limits = true
+editor_draw_drag_margin = true
+script = ExtResource("3_g5rfp")
+target = NodePath("../Tank")
