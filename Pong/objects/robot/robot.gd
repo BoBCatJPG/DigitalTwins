@@ -10,7 +10,7 @@ var thread
 func _ready():
 	#thread = Thread.new()
 	#thread.start(_receive_data)
-	$RealPose.text="RealPose: "+str(turtlebot_position)
+	$RealPose.text="RealPose: <NULL>"
 	server.listen(9002)
 	
 

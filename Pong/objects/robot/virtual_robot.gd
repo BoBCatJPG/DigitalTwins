@@ -35,7 +35,7 @@ func _physics_process(delta):
 		return
 	
 	
-	var direction:Vector3 = global_transform.origin.direction_to(navAgent.get_next_path_position()).normalized()*0.15
+	var direction:Vector3 = global_transform.origin.direction_to(navAgent.get_next_path_position()).normalized()*0.1
 	var steered_velocity:Vector3 = (direction-velocity) * delta * steer_speed
 	var new_agent_velocity:Vector3 = velocity +steered_velocity
 	navAgent.set_velocity(new_agent_velocity)
@@ -84,28 +84,6 @@ func _send_data(pos: Vector3,vel,flag):
 	socket.put_packet(packed_array.to_byte_array())
 	
 	print("invio: ",position," ",150," ",flag)
-	
-	#print("mando a ",TURTLEBOTR_IP,": ",position.x*1000," ",position.y*1000," ",position.z*-1000)
-	
-#func _receive_data():
-#	server.poll()
-#	if server.is_connection_available():
-#		var peer: PacketPeerUDP = server.take_connection()
-#		var packet = peer.get_packet()
-#		turtlebot_position.x=packet.decode_float(0)/1000
-#		turtlebot_position.y=packet.decode_float(4)/1000
-#		turtlebot_position.z=packet.decode_float(8)/-1000
-#		print("turtlebot_position: ",turtlebot_position)
-#		hasReceivedPosition = true
-
-
-
-	
-
-	
-	
-	
-
 
 func _on_button_pressed():
 	var reset_pos=Vector3(0.16,0.019,-0.16)
