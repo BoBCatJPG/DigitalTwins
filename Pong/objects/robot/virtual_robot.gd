@@ -35,7 +35,7 @@ func _physics_process(delta):
 		return
 	
 	
-	var direction:Vector3 = global_transform.origin.direction_to(navAgent.get_next_path_position()).normalized()*0.1
+	var direction:Vector3 = global_transform.origin.direction_to(navAgent.get_next_path_position()).normalized()*0.15
 	var steered_velocity:Vector3 = (direction-velocity) * delta * steer_speed
 	var new_agent_velocity:Vector3 = velocity +steered_velocity
 	navAgent.set_velocity(new_agent_velocity)
@@ -60,8 +60,9 @@ func _on_target_position_on_click(newPosition):
 	setTargetPosition(newPosition)
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
-	velocity = safe_velocity
-	rotation.y = atan2(velocity.x, velocity.z)
+	if safe_velocity.length()<=0.2:
+		velocity = safe_velocity
+		rotation.y = atan2(velocity.x, velocity.z)
 
 
 func _on_nav_timer_timeout():
@@ -75,7 +76,7 @@ func _send_data(pos: Vector3,vel,flag):
 	packed_array.set(0, pos.x*1000)
 	packed_array.set(1, pos.y*1000)
 	packed_array.set(2, pos.z*-1000)
-	packed_array.set(3, 150)
+	packed_array.set(3, vel.length()*1000)
 	if flag==1:
 		packed_array.set(4,1.0)
 	else:
@@ -83,7 +84,7 @@ func _send_data(pos: Vector3,vel,flag):
 	
 	socket.put_packet(packed_array.to_byte_array())
 	
-	print("invio: ",position," ",150," ",flag)
+	print("invio: ",position," ",vel.length()," ",flag)
 
 func _on_button_pressed():
 	var reset_pos=Vector3(0.16,0.019,-0.16)

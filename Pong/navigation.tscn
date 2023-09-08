@@ -167,7 +167,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 shape = SubResource("ConcavePolygonShape3D_kbrr5")
 
 [node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="DynamicObstacle"]
-estimate_radius = false
 radius = 0.2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="DynamicObstacle"]

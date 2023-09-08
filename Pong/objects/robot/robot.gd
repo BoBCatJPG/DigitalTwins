@@ -19,6 +19,7 @@ func _exit_tree():
 
 
 func _physics_process(delta):
+	$Ghost.rotation.y=$VirtualRobot.rotation.y
 	server.poll()
 	#print("Ricevo")
 	if server.is_connection_available():
