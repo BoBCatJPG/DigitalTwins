@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://ceyshtnw45g3v"]
+[gd_scene load_steps=21 format=3 uid="uid://ceyshtnw45g3v"]
 
 [ext_resource type="Material" uid="uid://d0gmvf62uyhd0" path="res://addons/kenney_prototype_tools/materials/red/material_01.tres" id="1_7rrgx"]
 [ext_resource type="PackedScene" uid="uid://cgox167shdv31" path="res://objects/robot/robot.tscn" id="2_r1sig"]
@@ -55,7 +55,11 @@ size = Vector3(0.2, 0.5, 1)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_puyyh"]
 data = PackedVector3Array(-0.1, 0.25, 0.5, 0.1, 0.25, 0.5, -0.1, -0.25, 0.5, 0.1, 0.25, 0.5, 0.1, -0.25, 0.5, -0.1, -0.25, 0.5, 0.1, 0.25, -0.5, -0.1, 0.25, -0.5, 0.1, -0.25, -0.5, -0.1, 0.25, -0.5, -0.1, -0.25, -0.5, 0.1, -0.25, -0.5, 0.1, 0.25, 0.5, 0.1, 0.25, -0.5, 0.1, -0.25, 0.5, 0.1, 0.25, -0.5, 0.1, -0.25, -0.5, 0.1, -0.25, 0.5, -0.1, 0.25, -0.5, -0.1, 0.25, 0.5, -0.1, -0.25, -0.5, -0.1, 0.25, 0.5, -0.1, -0.25, 0.5, -0.1, -0.25, -0.5, 0.1, 0.25, 0.5, -0.1, 0.25, 0.5, 0.1, 0.25, -0.5, -0.1, 0.25, 0.5, -0.1, 0.25, -0.5, 0.1, 0.25, -0.5, -0.1, -0.25, 0.5, 0.1, -0.25, 0.5, -0.1, -0.25, -0.5, 0.1, -0.25, 0.5, 0.1, -0.25, -0.5, -0.1, -0.25, -0.5)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x634x"]
+albedo_color = Color(0.717647, 0.517647, 0.376471, 1)
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_alwy5"]
+material = SubResource("StandardMaterial3D_x634x")
 top_radius = 0.1
 bottom_radius = 0.1
 height = 0.3
@@ -117,7 +121,7 @@ transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 1.5, 0
 mesh = SubResource("QuadMesh_ku3i0")
 
 [node name="CSGMesh3D3" type="CSGMesh3D" parent="NavigationRegion3D/CSGCombiner3D"]
-transform = Transform3D(0.999839, 0, 0.017941, 0, 1, 0, -0.017941, 0, 0.999839, 1.5, 0.104, -2)
+transform = Transform3D(0.999996, 0, -0.00277509, 0, 1, 0, 0.00277509, 0, 0.999996, 1.5, 0.104, -2)
 mesh = SubResource("QuadMesh_ku3i0")
 
 [node name="Floor" type="Node3D" parent="NavigationRegion3D"]
