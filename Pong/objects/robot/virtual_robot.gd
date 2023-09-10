@@ -61,7 +61,7 @@ func _on_target_position_on_click(newPosition):
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
 	
-	if safe_velocity.length()<=0.2:
+	if safe_velocity.length()<=0.25:
 		velocity = safe_velocity
 		rotation.y = atan2(velocity.x, velocity.z)
 
