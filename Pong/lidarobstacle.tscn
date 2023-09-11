@@ -13,3 +13,4 @@ mesh = SubResource("BoxMesh_de7sn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("ConcavePolygonShape3D_no284")
+disabled = true

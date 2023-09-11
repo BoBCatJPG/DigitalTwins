@@ -13,6 +13,7 @@ func _ready():
 	$RealPose.text="RealPose: <NULL>"
 	server.listen(9002)
 	lidar_server.listen(9002)  # Server per i dati del LiDAR
+	object_scene=preload("res://lidarobstacle.tscn")
 	
 	
 
@@ -42,12 +43,6 @@ func _receive_pos():
 		$Ghost.rotation.y=$VirtualRobot.rotation.y
 		$RealPose.text="RealPose: "+str(turtlebot_position)
 func _receive_lidar():
-	# Create a new instance of the object scene
-	var object_instance = object_scene.instantiate()
-	object_instance.global_position=Vector3(0.30, 0.10, 0)
-	# Add the instance to the current scene or another node
-	add_child(object_instance)
-	
 	lidar_server.poll()
 	if lidar_server.is_connection_available():
 		print("hello")
@@ -56,17 +51,23 @@ func _receive_lidar():
 		var distance = packet.decode_float(0)
 		print("distance: ", distance)
 		
+		# Create a new instance of the object scene
+		
+		
+		# Add the instance to the current scene or another node
+		
+		
 		# Calcola la nuova posizione del cubo rispetto al robot
 		var new_position = Vector3(distance, 0.19, 0)  # Supponiamo che il cubo si trovi lungo l'asse X
 		new_position += global_transform.origin  # Aggiungi la posizione del robot
 
 		# Istanza il cubo dalla scena del cubo
-		
+		var object_instance = object_scene.instantiate()
 		# Imposta la posizione del cubo
-		#cube_instance.global_transform.origin = new_position
+		object_instance.global_position=new_position
 
 		# Aggiungi il cubo come figlio del tuo nodo principale (dove vuoi mostrare i cubi)
-		#add_child(cube_instance)
+		add_child(object_instance)
 	
 	
 
