@@ -1,6 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://ceyshtnw45g3v"]
+[gd_scene load_steps=22 format=3 uid="uid://ceyshtnw45g3v"]
 
 [ext_resource type="Material" uid="uid://d0gmvf62uyhd0" path="res://addons/kenney_prototype_tools/materials/red/material_01.tres" id="1_7rrgx"]
+[ext_resource type="Script" path="res://navigation.gd" id="1_d2af4"]
 [ext_resource type="PackedScene" uid="uid://cgox167shdv31" path="res://objects/robot/robot.tscn" id="2_r1sig"]
 [ext_resource type="PackedScene" uid="uid://ch3r467g7tg2k" path="res://objects/target_position/target_position.tscn" id="3_kewkh"]
 
@@ -89,6 +90,7 @@ _data = {
 }
 
 [node name="World" type="Node3D"]
+script = ExtResource("1_d2af4")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_padts")
@@ -179,4 +181,7 @@ libraries = {
 "": SubResource("AnimationLibrary_381fk")
 }
 
+[node name="Updatemap" type="Timer" parent="."]
+
 [connection signal="onClick" from="TargetPosition" to="Robot" method="_on_target_position_on_click"]
+[connection signal="timeout" from="Updatemap" to="." method="_on_updatemap_timeout"]

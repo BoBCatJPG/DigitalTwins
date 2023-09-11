@@ -70,6 +70,7 @@ func _on_nav_timer_timeout():
 	if firstChange : return
 	setTargetPosition(nav_path_goal_position)
 	
+	
 
 func _send_data(pos: Vector3,vel,flag):
 	var packed_array: PackedFloat32Array = PackedFloat32Array()
@@ -93,3 +94,5 @@ func _on_button_pressed():
 	global_transform.origin=reset_pos
 	_send_data(reset_pos,velocity,1)
 	print("pose reset...",reset_pos)
+	
+
