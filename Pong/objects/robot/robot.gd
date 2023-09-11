@@ -1,17 +1,18 @@
 extends Node3D
 
 
-var server_pos := UDPServer.new()
+var server := UDPServer.new()
+var lidar_server := UDPServer.new()
 var turtlebot_position: Vector3 = Vector3.ZERO
 var threadReceive = true
 var thread
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	#thread = Thread.new()
-	#thread.start(_receive_data)
 	$RealPose.text="RealPose: <NULL>"
-	server_pos.listen(9002)
+	server.listen(9002)
+	lidar_server.listen(9002)  # Server per i dati del LiDAR
 	
 
 func _exit_tree():
@@ -21,6 +22,7 @@ func _exit_tree():
 func _physics_process(delta):
 	$Ghost.rotation.y=$VirtualRobot.rotation.y
 	_receive_pos()
+	_receive_lidar()
 	
 		
 
@@ -28,9 +30,9 @@ func _physics_process(delta):
 func _on_target_position_on_click(newPosition):
 		$VirtualRobot._on_target_position_on_click(newPosition)
 func _receive_pos():
-	server_pos.poll()
-	if server_pos.is_connection_available():
-		var peer: PacketPeerUDP = server_pos.take_connection()
+	server.poll()
+	if server.is_connection_available():
+		var peer: PacketPeerUDP = server.take_connection()
 		var packet = peer.get_packet()
 		turtlebot_position.x=packet.decode_float(0)/1000
 		turtlebot_position.y=$VirtualRobot.global_position.y
@@ -38,6 +40,27 @@ func _receive_pos():
 		$Ghost.global_position = turtlebot_position
 		$Ghost.rotation.y=$VirtualRobot.rotation.y
 		$RealPose.text="RealPose: "+str(turtlebot_position)
+func _receive_lidar():
+	lidar_server.poll()
+	if lidar_server.is_connection_available():
+		print("hello")
+		var peer: PacketPeerUDP = lidar_server.take_connection()
+		var packet = peer.get_packet()
+		var distance = packet.decode_float(0)
+		print("distance: ", distance)
+		
+		# Calcola la nuova posizione del cubo rispetto al robot
+		var new_position = Vector3(distance, 0.19, 0)  # Supponiamo che il cubo si trovi lungo l'asse X
+		new_position += global_transform.origin  # Aggiungi la posizione del robot
+
+		# Istanza il cubo dalla scena del cubo
+		var cube_instance = load("res://lidarobstacle.tscn")
+		# Imposta la posizione del cubo
+		cube_instance.global_transform.origin = new_position
+
+		# Aggiungi il cubo come figlio del tuo nodo principale (dove vuoi mostrare i cubi)
+		add_child(cube_instance)
+	
 	
 
 

@@ -127,11 +127,11 @@ class Turtlebot:
 
 
     def setSpeeds(self, vl, vr):
-        data = struct.pack("<ii", vl, vr)
+        data = struct.pack("<ii", int(vl),int(vr))
         return self.__transaction("02" + self.__encode_packet(data))
 
     def setPose(self, x, y, t):
-        data = struct.pack("<iii", x, y, t)
+        data = struct.pack("<iii", int(x), int(y), int(t))
         return self.__transaction("03" + self.__encode_packet(data))
 
     def clearDistances(self):

@@ -4,7 +4,7 @@ extends CharacterBody3D
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
-@export var steer_speed:float = 1.0
+@export var steer_speed:float = 4.0
 @onready var navAgent = $NavigationAgent3D
 @onready var navTimer = $NavTimer
 var socket: PacketPeerUDP
@@ -77,7 +77,7 @@ func _send_data(pos: Vector3,vel,flag):
 	packed_array.set(0, pos.x*1000)
 	packed_array.set(1, pos.y*1000)
 	packed_array.set(2, pos.z*-1000)
-	packed_array.set(3, vel.length()*1000)
+	packed_array.set(3, vel.length()*2000)
 	if flag==1:
 		packed_array.set(4,1.0)
 	else:
@@ -85,7 +85,7 @@ func _send_data(pos: Vector3,vel,flag):
 	
 	socket.put_packet(packed_array.to_byte_array())
 	
-	print("invio: ",position," ",vel.length()," ",flag)
+	#print("invio: ",position," ",vel.length()," ",flag)
 
 func _on_button_pressed():
 	var reset_pos=Vector3(0.16,0.019,-0.16)

@@ -3,15 +3,16 @@ import threading
 from threading import Lock
 from turtle3 import *
 from distance_control import *
-from polar_control import *
+from polar_control3 import *
 import socket
 import time
 from lds_diver import *
 lidar = LidarLDS(port="/dev/ttyUSB0", baudrate=230400, timeout=1000)
 
 def send_data(position, sock):
-    packed_data = struct.pack('fff', position[0], 19, position[1])  # y fittizia
+    packed_data = struct.pack('fff', position[0], 20, position[1])  # y fittizia
     sock.sendto(packed_data, ("192.168.70.106", 9002))
+    #print("invio: ",position[0],position[1])
 
 def receive_data(sock, t, p):
     while True:
@@ -30,7 +31,7 @@ def receive_data(sock, t, p):
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
         else:
             p.change_vel_max(velocity)
-            print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
+            #print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
             p.setTarget(godot_x, godot_z)
 
 def lidar_data_thread():
@@ -47,16 +48,15 @@ def send_lidar_data(ranges, intensities, scan_time, rpms):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     
     # Converte i dati in un formato adeguato per l'invio
-    packed_data = struct.pack('f' * len(ranges), *ranges)
-    packed_data += struct.pack('f' * len(intensities), *intensities)  # Aggiungi dati di intensità
-    packed_data += struct.pack('f', scan_time)  # Aggiungi tempo di scansione
-    packed_data += struct.pack('f', rpms)  # Aggiungi RPM del LIDAR
+    packed_data = struct.pack('f',ranges[0])
+    print(ranges[0])
     sock.sendto(packed_data, (HOST, PORT))
 
 if __name__ == "__main__":
     t = Turtlebot()
     t.open()
     t.setPose(160, 160, 0)
+    t.getPose()
     print("hello")
     t.setSpeeds(0, 0)
     p = PolarController(t,
@@ -83,10 +83,10 @@ if __name__ == "__main__":
     receive_thread.daemon = True  # Il thread terminerà quando il programma principale termina
     receive_thread.start()
 
-    # Crea un thread separato per la ricezione dei dati del LIDAR
-    #lidar_thread = threading.Thread(target=lidar_data_thread)
-    #lidar_thread.daemon = True  # Il thread terminerà quando il programma principale termina
-    #lidar_thread.start()
+    #Crea un thread separato per la ricezione dei dati del LIDAR
+    lidar_thread = threading.Thread(target=lidar_data_thread)
+    lidar_thread.daemon = True  # Il thread terminerà quando il programma principale termina
+    lidar_thread.start()
     
     try:
         while True:
