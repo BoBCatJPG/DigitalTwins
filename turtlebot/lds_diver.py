@@ -31,10 +31,12 @@ class LidarLDS :
 
     def stop_scan(self):
         self.p.write(b'e')
+        print("LIDAR: smetto di scansionare")
 
 
     def start_scan(self):
         self.p.write(b'b')
+        print("LIDAR: inizio a scansionare")
 
 
     def get_scan_data(self):

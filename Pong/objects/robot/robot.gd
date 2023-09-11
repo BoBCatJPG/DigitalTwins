@@ -1,7 +1,7 @@
 extends Node3D
 
 
-var server := UDPServer.new()
+var server_pos := UDPServer.new()
 var turtlebot_position: Vector3 = Vector3.ZERO
 var threadReceive = true
 var thread
@@ -11,7 +11,7 @@ func _ready():
 	#thread = Thread.new()
 	#thread.start(_receive_data)
 	$RealPose.text="RealPose: <NULL>"
-	server.listen(9002)
+	server_pos.listen(9002)
 	
 
 func _exit_tree():
@@ -20,10 +20,17 @@ func _exit_tree():
 
 func _physics_process(delta):
 	$Ghost.rotation.y=$VirtualRobot.rotation.y
-	server.poll()
-	#print("Ricevo")
-	if server.is_connection_available():
-		var peer: PacketPeerUDP = server.take_connection()
+	_receive_pos()
+	
+		
+
+
+func _on_target_position_on_click(newPosition):
+		$VirtualRobot._on_target_position_on_click(newPosition)
+func _receive_pos():
+	server_pos.poll()
+	if server_pos.is_connection_available():
+		var peer: PacketPeerUDP = server_pos.take_connection()
 		var packet = peer.get_packet()
 		turtlebot_position.x=packet.decode_float(0)/1000
 		turtlebot_position.y=$VirtualRobot.global_position.y
@@ -31,11 +38,7 @@ func _physics_process(delta):
 		$Ghost.global_position = turtlebot_position
 		$Ghost.rotation.y=$VirtualRobot.rotation.y
 		$RealPose.text="RealPose: "+str(turtlebot_position)
-		
-
-
-func _on_target_position_on_click(newPosition):
-		$VirtualRobot._on_target_position_on_click(newPosition)
+	
 
 
 

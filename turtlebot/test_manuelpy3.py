@@ -12,7 +12,7 @@ target_lock = Lock()
 def send_data(position, sock):
     packed_data = struct.pack('fff', position[0], 19, position[1])  # y fittizia
     sock.sendto(packed_data, ("192.168.70.106", 9002))
-    # print("invio", position[0], 0, position[1])
+    print("invio", position[0], 19, position[1])
 
 def receive_data(sock, t, p):
     while True:

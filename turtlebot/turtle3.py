@@ -53,15 +53,15 @@ class Turtlebot:
 
     def __decode_packet(self, s):
         i = 1
-        packet = ""
+        packet = []
         while i < len(s):
-            if s[i] == '>':
+            if s[i] == b'>'[0]:
                 break
-            ch = self.__decode_hex(ord(s[i]), ord(s[i+1]))
+            ch = self.__decode_hex(s[i], s[i+1])
             #print hex(ch),
             if ch == -1:
                 return None
-            packet = packet + chr(ch)
+            packet.append(ch)
             i = i + 2
         #print ""
         return packet
@@ -82,20 +82,23 @@ class Turtlebot:
     def __encode_packet(self, s):
         packet = ""
         for c in s:
-            packet = packet + self.__encode_hex(ord(c))
+            if isinstance(c, int):
+                packet = packet + self.__encode_hex(c)
+            else:
+                packet = packet + self.__encode_hex(ord(c))
         return packet
-
 
     def __transaction(self, packet):
         self.mutex.acquire()
         try:
-            self.__ser.write('#' + packet + '$')
+            packet_bytes = bytes('#' + packet + '$', 'utf-8')
+            self.__ser.write(packet_bytes)
             while True:
                 line = self.__ser.readline()
-                #print line
-                if (line is None)or(len(line) == 0):
+                #print(line)
+                if (line is None) or (len(line) == 0):
                     return None
-                if (line[0] == '<'): #and(line[-1] == '>'):
+                if (line[0] == b'<'[0]):  # and(line[-1] == '>'):
                     decoded_packet = self.__decode_packet(line)
                     return (decoded_packet[0], decoded_packet[1], decoded_packet[2:])
         finally:
@@ -103,20 +106,25 @@ class Turtlebot:
 
     def getPose(self):
         reply = self.__transaction("01")
-        #print reply
         if reply is not None:
-            d = struct.unpack("<fffffffff", reply[2])
-            self.__pose.x = d[0]
-            self.__pose.y = d[1]
-            self.__pose.theta = d[2]
-            self.__pose.vl = d[3]
-            self.__pose.vr = d[4]
-            self.__pose.v = d[5]
-            self.__pose.w = d[6]
-            self.__pose.linear = d[7]
-            self.__pose.angular = d[8]
+            reply_bytes = reply[2]  # Convert the string to bytes
+            if len(reply_bytes) == 36:
+                d = struct.unpack("<fffffffff", bytes(reply_bytes))
+                self.__pose.x = d[0]
+                self.__pose.y = d[1]
+                self.__pose.theta = d[2]
+                self.__pose.vl = d[3]
+                self.__pose.vr = d[4]
+                self.__pose.v = d[5]
+                self.__pose.w = d[6]
+                self.__pose.linear = d[7]
+                self.__pose.angular = d[8]
+            else:
+                print("Received data has incorrect length:", len(reply_bytes))
 
         return self.__pose
+
+
 
     def setSpeeds(self, vl, vr):
         data = struct.pack("<ii", vl, vr)
