@@ -12,5 +12,6 @@ func _process(delta):
 
 
 func _on_updatemap_timeout():
+	pass
 	#var rid=$NavigationRegion3D.get_region_rid()
 	#NavigationServer3D.map_force_update(rid)

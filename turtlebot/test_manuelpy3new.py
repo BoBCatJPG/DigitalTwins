@@ -30,7 +30,7 @@ def receive_data(sock, t, p):
             t.setPose(godot_x, godot_z, 0)
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
         else:
-            p.change_vel_max(velocity)
+            #p.change_vel_max(velocity)
             #print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
             p.setTarget(godot_x, godot_z)
 
@@ -42,15 +42,12 @@ def lidar_data_thread():
         send_lidar_data(ranges, intensities, scan_time, rpms)
 
 def send_lidar_data(ranges, intensities, scan_time, rpms):
-    HOST = "192.168.70.109"  # Indirizzo IP del robot digitale
-    PORT = 9003  # Porta utilizzata per ricevere
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    
     # Converte i dati in un formato adeguato per l'invio
-    packed_data = struct.pack('f',ranges[0])
+    packed_data = struct.pack('360f', *ranges)
     print(ranges[0])
-    sock.sendto(packed_data, (HOST, PORT))
+    sock.sendto(packed_data,("192.168.70.106", 9003))
 
 if __name__ == "__main__":
     t = Turtlebot()
@@ -63,7 +60,7 @@ if __name__ == "__main__":
                         160.0,  # wheel base
                         0.005,  # 5ms
                         5,  # kp
-                        150,  # saturation
+                        200,  # saturation
                         5,  # kp ang
                         50,  # saturation ang
                         10)  # tolerance

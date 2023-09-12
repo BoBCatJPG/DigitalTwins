@@ -1,16 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://dgl2asd6p1iai"]
+[gd_scene load_steps=2 format=3 uid="uid://dgl2asd6p1iai"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_de7sn"]
-size = Vector3(0.05, 0.05, 0.05)
+[sub_resource type="CylinderMesh" id="CylinderMesh_tq3o7"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.2
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_no284"]
-data = PackedVector3Array(-0.025, 0.025, 0.025, 0.025, 0.025, 0.025, -0.025, -0.025, 0.025, 0.025, 0.025, 0.025, 0.025, -0.025, 0.025, -0.025, -0.025, 0.025, 0.025, 0.025, -0.025, -0.025, 0.025, -0.025, 0.025, -0.025, -0.025, -0.025, 0.025, -0.025, -0.025, -0.025, -0.025, 0.025, -0.025, -0.025, 0.025, 0.025, 0.025, 0.025, 0.025, -0.025, 0.025, -0.025, 0.025, 0.025, 0.025, -0.025, 0.025, -0.025, -0.025, 0.025, -0.025, 0.025, -0.025, 0.025, -0.025, -0.025, 0.025, 0.025, -0.025, -0.025, -0.025, -0.025, 0.025, 0.025, -0.025, -0.025, 0.025, -0.025, -0.025, -0.025, 0.025, 0.025, 0.025, -0.025, 0.025, 0.025, 0.025, 0.025, -0.025, -0.025, 0.025, 0.025, -0.025, 0.025, -0.025, 0.025, 0.025, -0.025, -0.025, -0.025, 0.025, 0.025, -0.025, 0.025, -0.025, -0.025, -0.025, 0.025, -0.025, 0.025, 0.025, -0.025, -0.025, -0.025, -0.025, -0.025)
-
-[node name="Lidarobstacle" type="StaticBody3D"]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_de7sn")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("ConcavePolygonShape3D_no284")
-disabled = true
+[node name="Lidarobstacle" type="MeshInstance3D"]
+mesh = SubResource("CylinderMesh_tq3o7")

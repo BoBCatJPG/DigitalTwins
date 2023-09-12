@@ -61,7 +61,7 @@ func _on_target_position_on_click(newPosition):
 
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
 	
-	if safe_velocity.length()<=0.25:
+	if safe_velocity.length()<=0.4:
 		velocity = safe_velocity
 		rotation.y = atan2(velocity.x, velocity.z)
 
@@ -78,7 +78,7 @@ func _send_data(pos: Vector3,vel,flag):
 	packed_array.set(0, pos.x*1000)
 	packed_array.set(1, pos.y*1000)
 	packed_array.set(2, pos.z*-1000)
-	packed_array.set(3, vel.length()*2000)
+	packed_array.set(3, vel.length()*1000)
 	if flag==1:
 		packed_array.set(4,1.0)
 	else:
