@@ -11,6 +11,7 @@ var obstacle
 var vertices:PackedVector3Array
 @onready var ostacolo_reale=$ostacolo
 var obstacle_scene=load("res://lidarobstacle.tscn")
+var obstacle_vett=[]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -19,18 +20,20 @@ func _ready():
 	lidar_server.listen(9003)
 	var obstacle_scene=preload("res://lidarobstacle.tscn")
 	
+	for i in range(360):
+		obstacle=obstacle_scene.instantiate()
+		obstacle_vett.append(obstacle)
+		add_child(obstacle)
+		obstacle.position=Vector3(0,0.25,-2)
+		
+		
+	
 func _exit_tree():
 	threadReceive = false
 
 func _physics_process(delta):
-	#$Ghost.rotation.y=$VirtualRobot.rotation.y
 	_receive_pos()
 	_receive_lidar()
-	
-	
-
-
-
 
 func _on_target_position_on_click(newPosition):
 		$VirtualRobot._on_target_position_on_click(newPosition)
@@ -46,7 +49,7 @@ func _receive_pos():
 		$Ghost.global_position = turtlebot_position
 		$Ghost.rotation.y=$VirtualRobot.rotation.y
 		$RealPose.text="RealPose: "+str(turtlebot_position)
-
+'''
 func _receive_lidar():
 	lidar_server.poll()
 	if lidar_server.is_connection_available():
@@ -70,18 +73,26 @@ func _receive_lidar():
 					obstacle=obstacle_scene.instantiate()
 					obstacle.position=Vector3(x, y, z)
 					add_child(obstacle)
-					await get_tree().create_timer(10).timeout
-					remove_child(obstacle)
+'''
+func _receive_lidar():
+	lidar_server.poll()
+	if lidar_server.is_connection_available():
+		var peer: PacketPeerUDP = lidar_server.take_connection()
+		var packet = peer.get_packet()
+
+		# Decodifica i dati ricevuti (360 float values)
+		for i in range(360):
+			var distance = packet.decode_float(i * 4)
+		# Ignora le letture di Lidar troppo lontane (imposta una soglia)
+			if distance > 0.0 and distance<1:  # Soglia in millimetri (1 metro)
+				var angle = deg_to_rad(i)  # Converti l'angolo in radianti
+				var x = distance * cos(angle)  # Calcola la posizione lungo l'asse X
+				var z = distance * sin(angle)*-1  # Calcola la posizione lungo l'asse Y
+				var y = 0.25
+				obstacle_vett[i].position=Vector3(x, y, z)
+				
 		
 		
-		
-		
-		
-	
-			
-	
-	
-	
 
 
 
