@@ -10,7 +10,7 @@ from lds_diver import *
 lidar = LidarLDS(port="/dev/ttyUSB0", baudrate=230400, timeout=1000)
 
 def send_data(position, sock):
-    packed_data = struct.pack('fff', position[0], 20, position[1])  # y fittizia
+    packed_data = struct.pack('fff', position[0],position[1], position[2])  # y fittizia
     sock.sendto(packed_data, ("192.168.70.106", 9002))
     #print("invio: ",position[0],position[1])
 
@@ -26,7 +26,7 @@ def receive_data(sock, t, p):
         flag = packed_data[4]
 
         if flag == 1:
-            t.setSpeeds(0, 0)
+            p.setTarget(godot_x,godot_y)
             t.setPose(godot_x, godot_z, 0)
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
         else:
@@ -87,7 +87,7 @@ if __name__ == "__main__":
     
     try:
         while True:
-            position = [t.getPose().x, t.getPose().y]
+            position = [t.getPose().x, t.getPose().y,t.getPose().theta]
             send_data(position, sock)
             time.sleep(0.1)  # Aggiungi un piccolo ritardo per limitare l'invio dei dati
     except KeyboardInterrupt:

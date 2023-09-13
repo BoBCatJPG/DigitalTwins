@@ -8,10 +8,11 @@ var threadReceive = true
 var new_pos
 var last_position
 var obstacle
-var vertices:PackedVector3Array
+var vertices:PackedVector3Array=[360]
 @onready var ostacolo_reale=$ostacolo
 var obstacle_scene=load("res://lidarobstacle.tscn")
 var obstacle_vett=[]
+var turtle_theta
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -45,7 +46,8 @@ func _receive_pos():
 		var packet = peer.get_packet()
 		turtlebot_position.x=packet.decode_float(0)/1000
 		turtlebot_position.y=$VirtualRobot.global_position.y
-		turtlebot_position.z=packet.decode_float(8)/-1000
+		turtlebot_position.z=packet.decode_float(4)/-1000
+		turtle_theta=packet.decode_float(8)
 		$Ghost.global_position = turtlebot_position
 		$Ghost.rotation.y=$VirtualRobot.rotation.y
 		$RealPose.text="RealPose: "+str(turtlebot_position)
@@ -79,20 +81,30 @@ func _receive_lidar():
 	if lidar_server.is_connection_available():
 		var peer: PacketPeerUDP = lidar_server.take_connection()
 		var packet = peer.get_packet()
-
+		
+		var angles = []
+		for i in range(360):
+			angles.append(deg_to_rad(i))
 		# Decodifica i dati ricevuti (360 float values)
 		for i in range(360):
 			var distance = packet.decode_float(i * 4)
 		# Ignora le letture di Lidar troppo lontane (imposta una soglia)
-			if distance > 0.0 and distance<1:  # Soglia in millimetri (1 metro)
-				var angle = deg_to_rad(i)  # Converti l'angolo in radianti
-				var x = distance * cos(angle)  # Calcola la posizione lungo l'asse X
-				var z = distance * sin(angle)*-1  # Calcola la posizione lungo l'asse Y
-				var y = 0.25
-				obstacle_vett[i].position=Vector3(x, y, z)
-				
-		
-		
+			#if distance > 0.0 and distance<=2.5:  # Soglia in millimetri (1 metro)
+			var angle = angles[i]  # Converti l'angolo in radianti
+			var x = distance * cos(angle+turtle_theta)+global_position.x  #Calcola la posizione lungo l'asse X
+			var z = distance * sin(angle+turtle_theta)*-1+global_position.z  # Calcola la posizione lungo l'asse Y
+			var y = 0.25
+			#x += global_position.x
+			#y += global_position.y
+			#z += global_position.z
+			obstacle_vett[i].position=Vector3(x,y,z)
+			
 
 
 
+
+
+func _on_reset_obstacle_pressed():
+	for i in range(360):
+		obstacle_vett[i].position=Vector3(0,0.25,-2)
+	

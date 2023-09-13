@@ -89,7 +89,7 @@ func _send_data(pos: Vector3,vel,flag):
 	#print("invio: ",position," ",vel.length()," ",flag)
 
 func _on_button_pressed():
-	var reset_pos=Vector3(0.16,0.019,-0.16)
+	var reset_pos=Vector3(0.16,0.19,-0.16)
 	_on_target_position_on_click(reset_pos)
 	global_transform.origin=reset_pos
 	_send_data(reset_pos,velocity,1)

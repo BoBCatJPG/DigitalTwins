@@ -80,9 +80,9 @@ wait_time = 0.05
 autostart = true
 
 [node name="VirtualPose" type="Label" parent="VirtualRobot"]
-offset_left = 126.0
+offset_left = 210.415
 offset_top = 4.0
-offset_right = 300.0
+offset_right = 384.415
 offset_bottom = 30.0
 
 [node name="Ghost" type="Node3D" parent="."]
@@ -99,16 +99,28 @@ material_override = SubResource("StandardMaterial3D_gwu5w")
 mesh = SubResource("PrismMesh_11p1s")
 
 [node name="RealPose" type="Label" parent="."]
-offset_left = 692.906
-offset_top = 2.81077
-offset_right = 866.906
-offset_bottom = 28.8108
+offset_left = 810.552
+offset_top = 4.92635
+offset_right = 973.552
+offset_bottom = 21.9263
 
-[node name="Button" type="Button" parent="."]
-offset_right = 48.0
-offset_bottom = 31.0
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(1, 1.2)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
 text = "RESET POSE"
+
+[node name="ResetObstacle" type="Button" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "RESET OBSTACLES"
 
 [connection signal="velocity_computed" from="VirtualRobot/NavigationAgent3D" to="VirtualRobot" method="_on_navigation_agent_3d_velocity_computed" flags=18]
 [connection signal="timeout" from="VirtualRobot/NavTimer" to="VirtualRobot" method="_on_nav_timer_timeout" flags=18]
-[connection signal="pressed" from="Button" to="VirtualRobot" method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/Button" to="VirtualRobot" method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ResetObstacle" to="." method="_on_reset_obstacle_pressed"]
