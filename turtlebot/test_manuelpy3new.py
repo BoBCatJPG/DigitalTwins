@@ -26,11 +26,10 @@ def receive_data(sock, t, p):
         flag = packed_data[4]
 
         if flag == 1:
-            p.setTarget(godot_x,godot_y)
             t.setPose(godot_x, godot_z, 0)
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
         else:
-            #p.change_vel_max(velocity)
+            p.change_vel_max(velocity)
             #print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
             p.setTarget(godot_x, godot_z)
 
@@ -60,7 +59,7 @@ if __name__ == "__main__":
                         160.0,  # wheel base
                         0.005,  # 5ms
                         5,  # kp
-                        200,  # saturation
+                        150,  # saturation
                         5,  # kp ang
                         50,  # saturation ang
                         10)  # tolerance

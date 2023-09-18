@@ -44,7 +44,9 @@ texture_filter = 5
 script = ExtResource("1_n667e")
 
 [node name="VirtualRobot" type="CharacterBody3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 script = ExtResource("1_hafm7")
+metadata/_edit_lock_ = true
 
 [node name="BodyMesh" type="MeshInstance3D" parent="VirtualRobot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
@@ -86,6 +88,7 @@ offset_right = 384.415
 offset_bottom = 30.0
 
 [node name="Ghost" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 
 [node name="BodyMesh" type="MeshInstance3D" parent="Ghost"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
@@ -116,11 +119,6 @@ layout_mode = 2
 layout_mode = 2
 text = "RESET POSE"
 
-[node name="ResetObstacle" type="Button" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-text = "RESET OBSTACLES"
-
 [connection signal="velocity_computed" from="VirtualRobot/NavigationAgent3D" to="VirtualRobot" method="_on_navigation_agent_3d_velocity_computed" flags=18]
 [connection signal="timeout" from="VirtualRobot/NavTimer" to="VirtualRobot" method="_on_nav_timer_timeout" flags=18]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/Button" to="VirtualRobot" method="_on_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/ResetObstacle" to="." method="_on_reset_obstacle_pressed"]

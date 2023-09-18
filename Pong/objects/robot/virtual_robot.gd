@@ -36,7 +36,7 @@ func _physics_process(delta):
 	
 	
 	var direction:Vector3 = global_transform.origin.direction_to(navAgent.get_next_path_position()).normalized()*0.15
-	var steered_velocity:Vector3 = (direction-velocity) * delta * steer_speed
+	var steered_velocity:Vector3 = (direction-velocity)
 	var new_agent_velocity:Vector3 = velocity +steered_velocity
 	navAgent.set_velocity(new_agent_velocity)
 	
@@ -89,9 +89,7 @@ func _send_data(pos: Vector3,vel,flag):
 	#print("invio: ",position," ",vel.length()," ",flag)
 
 func _on_button_pressed():
-	var reset_pos=Vector3(0.16,0.19,-0.16)
-	_on_target_position_on_click(reset_pos)
-	global_transform.origin=reset_pos
+	var reset_pos=global_position
 	_send_data(reset_pos,velocity,1)
 	print("pose reset...",reset_pos)
 	

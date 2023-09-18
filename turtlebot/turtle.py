@@ -109,7 +109,7 @@ class Turtlebot:
             self.__pose.x = d[0]
             self.__pose.y = d[1]
             self.__pose.theta = d[2]
-            self.__pose.vl = d[3]
+            self.__pose.vel = d[3]
             self.__pose.vr = d[4]
             self.__pose.v = d[5]
             self.__pose.w = d[6]
