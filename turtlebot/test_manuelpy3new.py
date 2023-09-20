@@ -26,12 +26,13 @@ def receive_data(sock, t, p):
         flag = packed_data[4]
 
         if flag == 1:
-            t.setPose(godot_x, godot_z, 0)
+            t.setPose(godot_x, godot_z, godot_y)
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
         else:
             p.change_vel_max(velocity)
+            p.setTarget(godot_x,godot_z)
             #print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
-            p.setTarget(godot_x, godot_z)
+            
 
 def lidar_data_thread():
     while True:
@@ -45,13 +46,12 @@ def send_lidar_data(ranges, intensities, scan_time, rpms):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # Converte i dati in un formato adeguato per l'invio
     packed_data = struct.pack('360f', *ranges)
-    print(ranges[0])
     sock.sendto(packed_data,("192.168.70.106", 9003))
 
 if __name__ == "__main__":
     t = Turtlebot()
     t.open()
-    t.setPose(160, 160, 0)
+    t.setPose(600, 534, 0)
     t.getPose()
     print("hello")
     t.setSpeeds(0, 0)

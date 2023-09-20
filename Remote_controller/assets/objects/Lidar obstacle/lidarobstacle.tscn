@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgl2asd6p1iai"]
+
+[ext_resource type="Script" path="res://assets/objects/Lidar obstacle/lidarobstacle.gd" id="1_sk2we"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ybi7r"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.5
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_eit4r"]
+height = 0.5
+radius = 0.01
+
+[node name="Lidarobstacle" type="CharacterBody3D"]
+script = ExtResource("1_sk2we")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("CylinderMesh_ybi7r")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("CylinderShape3D_eit4r")
+
+[node name="NavigationObstacle3D" type="NavigationObstacle3D" parent="."]
+estimate_radius = false
+radius = 0.01

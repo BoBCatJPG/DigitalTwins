@@ -1,0 +1,23 @@
+[gd_scene load_steps=5 format=3 uid="uid://ch3r467g7tg2k"]
+
+[ext_resource type="Script" path="res://assets/objects/target_position/target_position.gd" id="1_7w6yp"]
+[ext_resource type="Material" uid="uid://b7kc8jfs4fowj" path="res://addons/kenney_prototype_tools/materials/green/material_02.tres" id="1_j1wdu"]
+[ext_resource type="Material" uid="uid://blfyvmtrl8jdy" path="res://addons/kenney_prototype_tools/materials/light/material_01.tres" id="3_2vgva"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_swcxf"]
+top_radius = 0.1
+bottom_radius = 0.0
+height = 0.15
+
+[node name="TargetPosition" type="Marker3D"]
+script = ExtResource("1_7w6yp")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+material_override = ExtResource("1_j1wdu")
+mesh = SubResource("CylinderMesh_swcxf")
+
+[node name="Ghost" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+material_override = ExtResource("3_2vgva")
+mesh = SubResource("CylinderMesh_swcxf")
