@@ -12,7 +12,7 @@ class Pose:
         self.y = 0
         self.theta = 0
         self.vl = 0 # velocita' ruota sinistra (attuale)
-        self.vr = 0 # veloctia' ruota destra (attuale)
+        self.vr = 0 # velocita' ruota destra (attuale)
         self.v = 0 # velocita' lineare del robot
         self.w = 0 # velocita' angolare del robot
         self.linear = 0 # distanza lineare percorsa dal robot

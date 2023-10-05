@@ -46,8 +46,7 @@ class LidarLDS :
         rpms = 0
        
         raw_bytes =  bytearray(bytes([0xfa, 0xa0]) + self.p.read(2518))
-        # copiare da https://github.com/ROBOTIS-GIT/hls_lfcd_lds_driver/blob/master/src/hlds_laser_publisher.cpp
-
+        
         if raw_bytes[0] == 0xFA and raw_bytes[1] == 0xA0:
 
             for i in range(0, len(raw_bytes), 42):

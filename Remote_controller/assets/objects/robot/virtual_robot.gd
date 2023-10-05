@@ -19,12 +19,14 @@ var firstChange = true
 var nav_path_goal_position:Vector3
 var linearVelocityLength: float
 var angle
+var nodo_padre
 func _ready():
+	nodo_padre=get_parent()
 	print(rotation_degrees.y)
 	print(deg_to_rad(rotation.y))
 	print(TURTLEBOTR_IP)
-	socket = PacketPeerUDP.new()
 	$VirtualPose.text="Virtual Pose: "+str(global_position)
+	socket = PacketPeerUDP.new()
 	var result = socket.connect_to_host(TURTLEBOTR_IP, TURTLEBOT_PORT)
 	if result == OK:
 		print("Connessione al TurtleBot stabilita.")
@@ -47,11 +49,6 @@ func _physics_process(delta):
 	move_and_slide()
 	
 	$VirtualPose.text="Virtual Pose: "+str(global_position)
-	
-	#if hasReceivedPosition:
-			# Esegui il movimento solo se hai ricevuto nuovi dati di posizione
-			#global_position = turtlebot_position
-			#hasReceivedPosition = false  
 
 func setTargetPosition(new_pos:Vector3):
 	navAgent.set_target_position(new_pos)
@@ -64,7 +61,8 @@ func _on_target_position_on_click(newPosition):
 func _on_navigation_agent_3d_velocity_computed(safe_velocity):
 	
 	#if safe_velocity.length()<=0.4:
-	velocity = safe_velocity
+	var variabileDelPadre = nodo_padre.vel
+	velocity = variabileDelPadre
 	rotation.y = atan2(velocity.x, velocity.z)
 
 
@@ -86,7 +84,6 @@ func _send_data(pos: Vector3,vel,flag):
 		packed_array.set(4,1.0)
 	else:
 		packed_array.set(4,0.0)
-	print(angle)
 	socket.put_packet(packed_array.to_byte_array())
 	
 

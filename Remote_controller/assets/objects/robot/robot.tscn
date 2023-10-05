@@ -22,6 +22,9 @@ var obstacle_scene=preload(\"res://assets/objects/Lidar obstacle/lidarobstacle.t
 var obstacle_vett=[]
 var turtle_theta
 var obstacle_dict = {}
+var vel
+var ghost_position
+var virtual_position
 # Called when the node enters the scene tree for the first time.
 
 var lidarThread = null
@@ -33,6 +36,8 @@ func _ready():
 	lidarThread = Thread.new()
 	var err = lidarThread.start(threadLidarFunc)
 	print(\"Errore? \", err)
+	ghost_position = $Ghost.global_position
+	
 
 func _exit_tree():
 	threadReceive = false
@@ -40,6 +45,12 @@ func _exit_tree():
 
 func _physics_process(delta):
 	_receive_pos()
+	virtual_position = $VirtualRobot.global_position
+	vel = (virtual_position - ghost_position) / delta
+	ghost_position = virtual_position
+	
+	print(vel)
+	
 
 func _on_target_position_on_click(newPosition):
 		$VirtualRobot._on_target_position_on_click(newPosition)
@@ -110,8 +121,6 @@ func _receive_lidar():
 				# Se il Lidar non rileva un ostacolo, rimuovi l'ostacolo se esiste
 				if obstacle_dict.has(i):
 					obstacle_dict[i].deactive() 
-					#obstacle_dict[i].queue_free()
-			#		obstacle_dict[i] = null
 
 
 
