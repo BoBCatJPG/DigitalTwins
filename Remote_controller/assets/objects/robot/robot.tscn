@@ -25,6 +25,7 @@ var obstacle_dict = {}
 var vel
 var ghost_position
 var virtual_position
+var maxDistance=0.15
 # Called when the node enters the scene tree for the first time.
 
 var lidarThread = null
@@ -45,11 +46,15 @@ func _exit_tree():
 
 func _physics_process(delta):
 	_receive_pos()
-	virtual_position = $VirtualRobot.global_position
-	vel = (virtual_position - ghost_position) / delta
-	ghost_position = virtual_position
-	
-	print(vel)
+
+	var virtualRobotPos = $VirtualRobot.global_position
+	var ghostPos =$Ghost.global_position
+	var dir = ghostPos - virtualRobotPos
+	var distance = dir.length()
+	if distance > maxDistance:
+		dir = dir.normalized() * maxDistance
+
+		$VirtualRobot.global_position = ghostPos - dir
 	
 
 func _on_target_position_on_click(newPosition):
@@ -58,6 +63,7 @@ func _on_target_position_on_click(newPosition):
 func _receive_pos():
 	server.poll()
 	if server.is_connection_available():
+		
 		var peer: PacketPeerUDP = server.take_connection()
 		var packet = peer.get_packet()
 		turtlebot_position.x=packet.decode_float(0)/1000

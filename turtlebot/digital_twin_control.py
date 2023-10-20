@@ -9,10 +9,13 @@ import time
 from lds_diver import *
 lidar = LidarLDS(port="/dev/ttyUSB0", baudrate=230400, timeout=1000)
 
+
 def send_data(position, sock):
-    packed_data = struct.pack('fff', position[0],position[1], position[2])  # y fittizia
-    sock.sendto(packed_data, ("192.168.70.106", 9002))
-    #print("invio: ",position[0],position[1])
+    packed_data = struct.pack(
+        'fff', position[0], position[1], position[2])  # y fittizia
+    sock.sendto(packed_data, ("192.168.70.118", 9002))
+    # print("invio: ",position[0],position[1])
+
 
 def receive_data(sock, t, p):
     while True:
@@ -30,23 +33,25 @@ def receive_data(sock, t, p):
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
         else:
             p.change_vel_max(velocity)
-            p.setTarget(godot_x,godot_z)
-            #print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
-            
+            p.setTarget(godot_x, godot_z)
+            # print("Ricevo:", godot_x, godot_y, godot_z, velocity, flag)
+
 
 def lidar_data_thread():
     while True:
         ranges, intensities, scan_time, rpms = lidar.get_scan_data()
-        
+
         # Invia i dati del LIDAR al robot digitale su Godot
         send_lidar_data(ranges, intensities, scan_time, rpms)
+
 
 def send_lidar_data(ranges, intensities, scan_time, rpms):
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # Converte i dati in un formato adeguato per l'invio
     packed_data = struct.pack('360f', *ranges)
-    sock.sendto(packed_data,("192.168.70.106", 9003))
+    sock.sendto(packed_data, ("192.168.70.118", 9003))
+
 
 if __name__ == "__main__":
     t = Turtlebot()
@@ -69,26 +74,29 @@ if __name__ == "__main__":
     time.sleep(1)
     lidar.start_scan()
 
-    HOST = "192.168.70.109"  # Indirizzo IP del robot digitale
+    HOST = "192.168.70.120"  # Indirizzo IP del robot digitale
     PORT = 9001  # Porta utilizzata per ricevere
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((HOST, PORT))
-   
+
     # Crea un thread separato per la ricezione dei dati dal robot digitale
     receive_thread = threading.Thread(target=receive_data, args=(sock, t, p))
-    receive_thread.daemon = True  # Il thread terminerà quando il programma principale termina
+    # Il thread terminerà quando il programma principale termina
+    receive_thread.daemon = True
     receive_thread.start()
 
-    #Crea un thread separato per la ricezione dei dati del LIDAR
+    # Crea un thread separato per la ricezione dei dati del LIDAR
     lidar_thread = threading.Thread(target=lidar_data_thread)
-    lidar_thread.daemon = True  # Il thread terminerà quando il programma principale termina
+    # Il thread terminerà quando il programma principale termina
+    lidar_thread.daemon = True
     lidar_thread.start()
-    
+
     try:
         while True:
-            position = [t.getPose().x, t.getPose().y,t.getPose().theta]
+            position = [t.getPose().x, t.getPose().y, t.getPose().theta]
             send_data(position, sock)
-            time.sleep(0.1)  # Aggiungi un piccolo ritardo per limitare l'invio dei dati
+            # Aggiungi un piccolo ritardo per limitare l'invio dei dati
+            time.sleep(0.1)
     except KeyboardInterrupt:
         print("Exiting...")
     finally:

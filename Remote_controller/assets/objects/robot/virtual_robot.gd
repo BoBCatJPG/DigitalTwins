@@ -9,7 +9,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var navTimer = $NavTimer
 var socket: PacketPeerUDP
 var TURTLEBOT_IP = "127.0.0.1"
-var TURTLEBOTR_IP = "192.168.70.109"
+var TURTLEBOTR_IP = "192.168.70.120"
 const TURTLEBOT_PORT = 9001
 var next_position=Vector3.ZERO
 var turtlebot_position: Vector3 = Vector3.ZERO
@@ -45,6 +45,7 @@ func _physics_process(delta):
 	navAgent.set_velocity(new_agent_velocity)
 	
 	
+	
 	_send_data(global_transform.origin,velocity,0)
 	move_and_slide()
 	
@@ -62,7 +63,7 @@ func _on_navigation_agent_3d_velocity_computed(safe_velocity):
 	
 	#if safe_velocity.length()<=0.4:
 	var variabileDelPadre = nodo_padre.vel
-	velocity = variabileDelPadre
+	velocity = safe_velocity # variabileDelPadre
 	rotation.y = atan2(velocity.x, velocity.z)
 
 
@@ -76,7 +77,7 @@ func _send_data(pos: Vector3,vel,flag):
 	var packed_array: PackedFloat32Array = PackedFloat32Array()
 	packed_array.resize(5)
 	packed_array.set(0, pos.x*1000)
-	angle=deg_to_rad(rotation_degrees.y)-deg_to_rad(90)
+	angle=deg_to_rad(rotation_degrees.y)-deg_to_rad(180)
 	packed_array.set(1, angle)
 	packed_array.set(2, pos.z*-1000)
 	packed_array.set(3, vel.length()*1000)
