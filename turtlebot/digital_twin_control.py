@@ -9,11 +9,13 @@ import time
 from lds_diver import *
 lidar = LidarLDS(port="/dev/ttyUSB0", baudrate=230400, timeout=1000)
 
+exit_event = threading.Event()
+
 
 def send_data(position, sock):
     packed_data = struct.pack(
         'fff', position[0], position[1], position[2])  # y fittizia
-    sock.sendto(packed_data, ("192.168.70.118", 9002))
+    sock.sendto(packed_data, ("192.168.70.121", 9002))
     # print("invio: ",position[0],position[1])
 
 
@@ -31,6 +33,10 @@ def receive_data(sock, t, p):
         if flag == 1:
             t.setPose(godot_x, godot_z, godot_y)
             print("pose: ", t.getPose().x, t.getPose().y, t.getPose().theta)
+        elif flag == 2:
+            print("chiusura forzata")
+            exit_event.set()
+
         else:
             p.change_vel_max(velocity)
             p.setTarget(godot_x, godot_z)
@@ -38,7 +44,7 @@ def receive_data(sock, t, p):
 
 
 def lidar_data_thread():
-    while True:
+    while not exit_event.is_set():
         ranges, intensities, scan_time, rpms = lidar.get_scan_data()
 
         # Invia i dati del LIDAR al robot digitale su Godot
@@ -50,7 +56,7 @@ def send_lidar_data(ranges, intensities, scan_time, rpms):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # Converte i dati in un formato adeguato per l'invio
     packed_data = struct.pack('360f', *ranges)
-    sock.sendto(packed_data, ("192.168.70.118", 9003))
+    sock.sendto(packed_data, ("192.168.70.121", 9003))
 
 
 if __name__ == "__main__":
@@ -74,7 +80,7 @@ if __name__ == "__main__":
     time.sleep(1)
     lidar.start_scan()
 
-    HOST = "192.168.70.120"  # Indirizzo IP del robot digitale
+    HOST = "192.168.70.123"  # Indirizzo IP del robot digitale
     PORT = 9001  # Porta utilizzata per ricevere
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((HOST, PORT))
@@ -92,7 +98,7 @@ if __name__ == "__main__":
     lidar_thread.start()
 
     try:
-        while True:
+        while not exit_event.is_set():
             position = [t.getPose().x, t.getPose().y, t.getPose().theta]
             send_data(position, sock)
             # Aggiungi un piccolo ritardo per limitare l'invio dei dati
@@ -100,5 +106,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("Exiting...")
     finally:
+        exit_event.set()
         sock.close()
         lidar.stop_scan()

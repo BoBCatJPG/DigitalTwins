@@ -1,9 +1,10 @@
-[gd_scene load_steps=19 format=3 uid="uid://ceyshtnw45g3v"]
+[gd_scene load_steps=20 format=3 uid="uid://ceyshtnw45g3v"]
 
 [ext_resource type="Material" uid="uid://d0gmvf62uyhd0" path="res://addons/kenney_prototype_tools/materials/red/material_01.tres" id="1_7rrgx"]
 [ext_resource type="Script" path="res://navigation.gd" id="1_qtu3a"]
 [ext_resource type="PackedScene" uid="uid://cgox167shdv31" path="res://assets/objects/robot/robot.tscn" id="2_r1sig"]
 [ext_resource type="PackedScene" uid="uid://ch3r467g7tg2k" path="res://assets/objects/target_position/target_position.tscn" id="3_kewkh"]
+[ext_resource type="PackedScene" uid="uid://cdlj8bwc8r6xm" path="res://menu.tscn" id="5_hgrxp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_u036g"]
 sky_top_color = Color(0.278431, 0.411765, 0.831373, 1)
@@ -23,8 +24,8 @@ sdfgi_enabled = true
 glow_enabled = true
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_dfdx2"]
-vertices = PackedVector3Array(1.52, 0.02, 1.84, 1.52, 0.02, 1.68, 1.2, 0.02, 1.6, 1.12, 0.02, 1.84, 0.8, 0.02, 0.16, 0.16, 0.02, 0.56, 0.16, 0.02, 0.96, 1.2, 0.02, 0.4, 1.52, 0.02, 0.32, 1.52, 0.02, 0.16, 1.12, 0.02, 0.16, 0.16, 0.02, 1.36, 0.16, 0.02, 1.84, 0.8, 0.02, 1.84, 1.2, 0.02, 0.4, 1.12, 0.02, 0.16, 0.8, 0.02, 0.16, 1.2, 0.02, 0.96, 0.8, 0.02, 1.84, 1.12, 0.02, 1.84, 1.2, 0.02, 1.6, 1.2, 0.02, 0.96, 0.8, 0.02, 0.16, 0.16, 0.02, 0.96, 0.16, 0.02, 1.36, 0.8, 0.02, 0.16, 0.16, 0.02, 0.16, 0.16, 0.02, 0.56, 1.84, 0.02, 1.6, 1.52, 0.02, 1.68, 1.52, 0.02, 1.84, 2.16, 0.02, 1.84, 2.88, 0.02, 0.96, 2.88, 0.02, 0.56, 2.48, 0.02, 0.16, 1.52, 0.02, 0.16, 1.52, 0.02, 0.32, 1.84, 0.02, 0.4, 2.16, 0.02, 0.16, 2.48, 0.02, 0.16, 2.16, 0.02, 0.16, 1.84, 0.02, 0.4, 1.84, 0.02, 0.96, 2.88, 0.02, 0.56, 2.88, 0.02, 0.16, 2.48, 0.02, 0.16, 2.48, 0.02, 1.84, 2.88, 0.02, 1.84, 2.88, 0.02, 1.36, 1.84, 0.02, 1.6, 2.16, 0.02, 1.84, 2.48, 0.02, 1.84, 2.88, 0.02, 1.36, 2.88, 0.02, 0.96, 2.48, 0.02, 0.16, 1.84, 0.02, 0.96)
-polygons = [PackedInt32Array(1, 0, 2), PackedInt32Array(2, 0, 3), PackedInt32Array(6, 5, 4), PackedInt32Array(8, 7, 9), PackedInt32Array(9, 7, 10), PackedInt32Array(13, 12, 11), PackedInt32Array(15, 14, 16), PackedInt32Array(16, 14, 17), PackedInt32Array(19, 18, 20), PackedInt32Array(20, 18, 21), PackedInt32Array(21, 18, 24), PackedInt32Array(21, 24, 23), PackedInt32Array(21, 23, 22), PackedInt32Array(25, 27, 26), PackedInt32Array(29, 28, 30), PackedInt32Array(30, 28, 31), PackedInt32Array(34, 33, 32), PackedInt32Array(36, 35, 37), PackedInt32Array(37, 35, 38), PackedInt32Array(40, 39, 41), PackedInt32Array(41, 39, 42), PackedInt32Array(45, 44, 43), PackedInt32Array(46, 48, 47), PackedInt32Array(50, 49, 51), PackedInt32Array(51, 49, 52), PackedInt32Array(52, 49, 53), PackedInt32Array(53, 49, 55), PackedInt32Array(53, 55, 54)]
+vertices = PackedVector3Array(2.83555, 0.02, 0.56, 2.83555, 0.02, 0.16, 2.43555, 0.02, 0.16, 2.43555, 0.02, 1.84, 2.83555, 0.02, 1.84, 2.83555, 0.02, 1.36, 0.755554, 0.02, 0.16, 0.115554, 0.02, 0.16, 0.115554, 0.02, 0.56, 0.115554, 0.02, 1.36, 0.115554, 0.02, 1.84, 0.755554, 0.02, 1.84, 2.83555, 0.02, 0.56, 2.43555, 0.02, 0.16, 2.11555, 0.02, 0.16, 2.11555, 0.02, 1.84, 2.43555, 0.02, 1.84, 2.83555, 0.02, 1.36, 0.755554, 0.02, 0.16, 0.115554, 0.02, 0.56, 0.115554, 0.02, 0.96, 1.07555, 0.02, 0.16, 0.115554, 0.02, 1.36, 0.755554, 0.02, 1.84, 1.07555, 0.02, 1.84, 2.83555, 0.02, 0.96, 2.83555, 0.02, 0.56, 2.11555, 0.02, 0.16, 1.47555, 0.02, 0.16, 0.115554, 0.02, 0.96, 0.115554, 0.02, 1.36, 1.07555, 0.02, 1.84, 1.47555, 0.02, 1.84, 2.11555, 0.02, 1.84, 2.83555, 0.02, 1.36, 2.83555, 0.02, 0.96, 1.47555, 0.02, 1.84, 1.47555, 0.02, 0.16, 1.07555, 0.02, 0.16, 0.115554, 0.02, 0.96)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(3, 5, 4), PackedInt32Array(8, 7, 6), PackedInt32Array(10, 9, 11), PackedInt32Array(14, 13, 12), PackedInt32Array(17, 16, 15), PackedInt32Array(18, 21, 19), PackedInt32Array(19, 21, 20), PackedInt32Array(24, 23, 22), PackedInt32Array(26, 25, 27), PackedInt32Array(27, 25, 28), PackedInt32Array(28, 25, 32), PackedInt32Array(28, 32, 31), PackedInt32Array(28, 31, 29), PackedInt32Array(29, 31, 30), PackedInt32Array(34, 33, 35), PackedInt32Array(35, 33, 36), PackedInt32Array(39, 38, 37)]
 cell_size = 0.08
 cell_height = 0.01
 agent_height = 0.14
@@ -117,7 +118,7 @@ material_override = ExtResource("1_7rrgx")
 mesh = SubResource("BoxMesh_srtxu")
 
 [node name="Wall" type="Node3D" parent="NavigationRegion3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.504446, 0, 1)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D/Wall"]
 
@@ -165,6 +166,11 @@ offset_top = 620.84
 offset_right = 1149.3
 offset_bottom = 645.84
 text = "Back to Menu"
+
+[node name="GUI" type="CanvasLayer" parent="."]
+visible = false
+
+[node name="Menu" parent="GUI" instance=ExtResource("5_hgrxp")]
 
 [connection signal="onClick" from="TargetPosition" to="Robot" method="_on_target_position_on_click"]
 [connection signal="pressed" from="back_to_main_menu" to="." method="_on_back_to_main_menu_pressed"]

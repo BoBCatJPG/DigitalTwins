@@ -9,7 +9,7 @@ var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var navTimer = $NavTimer
 var socket: PacketPeerUDP
 var TURTLEBOT_IP = "127.0.0.1"
-var TURTLEBOTR_IP = "192.168.70.120"
+var TURTLEBOTR_IP = "192.168.70.123"
 const TURTLEBOT_PORT = 9001
 var next_position=Vector3.ZERO
 var turtlebot_position: Vector3 = Vector3.ZERO
@@ -83,14 +83,21 @@ func _send_data(pos: Vector3,vel,flag):
 	packed_array.set(3, vel.length()*1000)
 	if flag==1:
 		packed_array.set(4,1.0)
+	elif flag==2:
+		packed_array.set(4,2.0)
 	else:
 		packed_array.set(4,0.0)
 	socket.put_packet(packed_array.to_byte_array())
 	
 
-func _on_button_pressed():
+func _on_button_pressed(): #reset pose
 	var reset_pos=global_position
 	_send_data(reset_pos,velocity,1)
 	print("pose reset...",reset_pos.x*1000,",",reset_pos.z*1000,",",angle)
+
+func _notification(what): #mi serve per terminare anche il turtlebot alla chiusura del gioco
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		_send_data(global_position,velocity,2)
+		print("exit")
 	
 
