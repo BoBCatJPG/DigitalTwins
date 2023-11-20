@@ -4,7 +4,7 @@
 
 [sub_resource type="LabelSettings" id="LabelSettings_7n3gp"]
 font_size = 22
-font_color = Color(0.443137, 0.4, 0.419608, 1)
+font_color = Color(0.870588, 0.870588, 0.870588, 1)
 
 [node name="Menu" type="Control"]
 layout_mode = 3
@@ -13,7 +13,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
 script = ExtResource("1_yp8ds")
 
 [node name="ColorRect" type="ColorRect" parent="."]
@@ -60,10 +59,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 placeholder_text = "192.168.xxx.xxx"
 
-[node name="Quit_button" type="Button" parent="VBoxContainer"]
+[node name="Starting_point_button" type="Button" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_vertical = 3
-text = "QUIT"
-
-[connection signal="pressed" from="VBoxContainer/Start_button" to="." method="_on_start_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/Quit_button" to="." method="_on_quit_button_pressed"]
+text = "Select Turtlebot starting point"

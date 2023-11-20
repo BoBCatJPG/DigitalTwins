@@ -26,6 +26,8 @@ var vel
 var ghost_position
 var virtual_position
 var maxDistance=0.15
+var semaforo_starting_point
+const module_mouse : GDScript = preload(\"res://mouse_module.gd\")
 # Called when the node enters the scene tree for the first time.
 
 var lidarThread = null
@@ -36,7 +38,7 @@ func _ready():
 	lidar_server.listen(9003)
 	lidarThread = Thread.new()
 	var err = lidarThread.start(threadLidarFunc)
-	print(\"Errore? \", err)
+	#print(\"Errore? \", err)
 	ghost_position = $Ghost.global_position
 	
 
@@ -76,10 +78,10 @@ func _receive_pos():
 
 
 func threadLidarFunc():
-	print(\"Inizio thread\")
+	#print(\"Inizio thread\")
 	while not exitThread:
 		_receive_lidar()
-	print(\"Chiudo thread\")
+	#print(\"Chiudo thread\")
 		
 func _receive_lidar():
 	lidar_server.poll()
@@ -127,6 +129,18 @@ func _receive_lidar():
 				# Se il Lidar non rileva un ostacolo, rimuovi l'ostacolo se esiste
 				if obstacle_dict.has(i):
 					obstacle_dict[i].deactive() 
+
+func _input(event:InputEvent):
+	if semaforo_starting_point:
+		if Input.is_action_just_pressed(\"mouse_left_click\"):
+			var mouse_pos:Vector2 = get_viewport().get_mouse_position()
+			var camera:Camera3D = get_viewport().get_camera_3d()
+			var camera_ray_coords:Vector3 = module_mouse.get_vector3_from_camera_raycast(camera, mouse_pos)
+			if camera_ray_coords == Vector3.ZERO:
+				return
+			self.global_position = camera_ray_coords
+			self.emit_signal(\"onClick\", camera_ray_coords)
+		
 
 
 

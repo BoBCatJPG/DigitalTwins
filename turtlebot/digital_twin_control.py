@@ -8,14 +8,14 @@ import socket
 import time
 from lds_diver import *
 lidar = LidarLDS(port="/dev/ttyUSB0", baudrate=230400, timeout=1000)
-
+GODOT_HOST = "192.168.70.121"
 exit_event = threading.Event()
 
 
 def send_data(position, sock):
     packed_data = struct.pack(
         'fff', position[0], position[1], position[2])  # y fittizia
-    sock.sendto(packed_data, ("192.168.70.121", 9002))
+    sock.sendto(packed_data, (GODOT_HOST, 9002))
     # print("invio: ",position[0],position[1])
 
 
@@ -56,7 +56,7 @@ def send_lidar_data(ranges, intensities, scan_time, rpms):
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # Converte i dati in un formato adeguato per l'invio
     packed_data = struct.pack('360f', *ranges)
-    sock.sendto(packed_data, ("192.168.70.121", 9003))
+    sock.sendto(packed_data, (GODOT_HOST, 9003))
 
 
 if __name__ == "__main__":
@@ -80,10 +80,14 @@ if __name__ == "__main__":
     time.sleep(1)
     lidar.start_scan()
 
-    HOST = "192.168.70.123"  # Indirizzo IP del robot digitale
+    HOST = "192.168.70.123"  # Indirizzo IP del turtlebot
     PORT = 9001  # Porta utilizzata per ricevere
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind((HOST, PORT))
+
+    data, info = sock.recvfrom(1024)  # aggiunta 14 nov 11:12
+    print("connected to ", info[0])
+    GODOT_HOST = info[0]
 
     # Crea un thread separato per la ricezione dei dati dal robot digitale
     receive_thread = threading.Thread(target=receive_data, args=(sock, t, p))
